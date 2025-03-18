@@ -1,0 +1,12 @@
+# Node modules
+node_modules/
+
+
+# Environment variables
+.env
+
+# Logs and cache
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.cache/
