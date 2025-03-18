@@ -16,7 +16,7 @@ connectDB();
 
 const app = express();
 
-app.use(cors({ origin: "https://pizza-app2-0.vercel.app/", credentials: true }));
+app.use(cors({ origin: "https://pizza-app2-0.vercel.app", credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
