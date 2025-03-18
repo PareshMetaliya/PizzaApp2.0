@@ -26,7 +26,7 @@ const Cart = () => {
   const user = useSelector(selectUser);
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const orders = useSelector(selectOrders);
-  const lastOrder = orders.length > 0 ? orders[orders.length - 1] : null;
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false); // Track if order is placed
 

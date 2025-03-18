@@ -13,7 +13,7 @@ import ProductCardSkeleton from "@/skeleton/ProductCardSkeleton";
 
 const Menu = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [showFilters, setShowFilters] = useState(false);
 
