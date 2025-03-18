@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { pizzas, totalPages, currentPage } = useSelector(selectpizzas);
+  const { pizzas, totalPages } = useSelector(selectpizzas);
   const orders = useSelector(selectOrders);
   const { totalOrders, completedOrders, pendingOrders, totalEarnings } =
     useSelector(selectStats);

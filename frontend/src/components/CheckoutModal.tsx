@@ -1,10 +1,9 @@
-import { useForm } from "react-hook-form";
+import { useForm,FieldError } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useEffect } from "react";
 
@@ -15,10 +14,10 @@ const CheckoutModal = ({ isOpen, onClose, onSubmit }: any) => {
     formState: { errors },
   } = useForm();
 
-   useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
-    
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -26,10 +25,6 @@ const CheckoutModal = ({ isOpen, onClose, onSubmit }: any) => {
           <DialogTitle>Edit profile</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        
-
-         
-
           {/* Address */}
           <div>
             <textarea
@@ -37,12 +32,12 @@ const CheckoutModal = ({ isOpen, onClose, onSubmit }: any) => {
               {...register("address", { required: "Address is required" })}
               className="w-full p-2 border rounded"
             />
-            {errors.address && (
-              <p className="text-red-500 text-sm">{errors.address.message}</p>
-            )}
-          </div>
+            
+{errors.address && (
+  <p className="text-red-500 text-sm">{(errors.address as FieldError).message}</p>
+)}
 
-        
+          </div>
 
           {/* Payment Method Selection */}
           <div>
@@ -70,4 +65,3 @@ const CheckoutModal = ({ isOpen, onClose, onSubmit }: any) => {
 };
 
 export default CheckoutModal;
-

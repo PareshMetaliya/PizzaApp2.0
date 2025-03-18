@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { getOrderByIdApi } from "@/api/orderAPI";
+import { OrderResponse } from "@/schema/orderSchema";
 
 const OrderStatus = () => {
   const { orderId } = useParams();
-  const [order, setOrder] = useState(null);
+  const [order, setOrder] = useState<OrderResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
+
+        if (!orderId) {
+          console.error("Order ID is missing");
+          return;
+        }
+
         const response = await getOrderByIdApi(orderId);
         if (response.success) {
+         
           setOrder(response.order);
         } else {
           setError("Order not found.");
@@ -92,20 +100,18 @@ const OrderStatus = () => {
                 className="flex flex-col items-center relative z-10"
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    index <= currentStepIndex
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${index <= currentStepIndex
                       ? "bg-green-500 text-white"
                       : "bg-gray-200 text-gray-500"
-                  }`}
+                    }`}
                 >
                   {index + 1}
                 </div>
                 <p
-                  className={`mt-2 text-sm text-center ${
-                    index <= currentStepIndex
+                  className={`mt-2 text-sm text-center ${index <= currentStepIndex
                       ? "text-green-600 font-medium"
                       : "text-gray-500"
-                  }`}
+                    }`}
                 >
                   {step.label}
                 </p>
@@ -126,7 +132,7 @@ const OrderStatus = () => {
             <div className="flex justify-between items-center border-b pb-4">
               <p className="text-sm text-gray-500">Total Amount</p>
               <p className="text-sm font-semibold text-gray-800">
-              ₹{order.totalAmount.toFixed(2)}
+                ₹{order.totalAmount.toFixed(2)}
               </p>
             </div>
             <div className="flex justify-between items-center border-b pb-4">
@@ -138,13 +144,12 @@ const OrderStatus = () => {
             <div className="flex justify-between items-center border-b pb-4">
               <p className="text-sm text-gray-500">Payment Status</p>
               <p
-                className={`text-sm font-semibold ${
-                  order.paymentStatus === "Paid"
+                className={`text-sm font-semibold ${order.paymentStatus === "Paid"
                     ? "text-green-600"
                     : order.paymentStatus === "Failed"
-                    ? "text-red-600"
-                    : "text-yellow-600"
-                }`}
+                      ? "text-red-600"
+                      : "text-yellow-600"
+                  }`}
               >
                 {order.paymentStatus}
               </p>
@@ -161,7 +166,7 @@ const OrderStatus = () => {
                     {product.pizzaDetails.name} ({product.size})
                   </p>
                   <p className="text-sm text-gray-500">
-                  ₹{product.price.toFixed(2)} x {product.quantity}
+                    ₹{product.price.toFixed(2)} x {product.quantity}
                   </p>
                 </div>
                 {product.extraToppings.length > 0 && (

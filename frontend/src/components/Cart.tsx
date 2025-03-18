@@ -16,10 +16,11 @@ import { createOrderApi } from "@/api/orderAPI";
 import { useNavigate } from "react-router";
 import { selectOrders } from "@/redux/slices/orderSlice";
 import toast from 'react-hot-toast';
+import { CreateOrderInput } from "@/schema/orderSchema";
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>();
- const navigate = useNavigate();
+  const navigate = useNavigate();
   const { items } = useSelector(selectCart);
   const calculateTotalPrice = useSelector(selectTotalAmount);
   const user = useSelector(selectUser);
@@ -54,7 +55,7 @@ const Cart = () => {
   const handleCheckout = () => {
     if (!isAuthenticated) {
       navigate("/login/cart")
-    
+
       toast.success('Login Required !')
     }
     setIsModalOpen(true);
@@ -72,94 +73,102 @@ const Cart = () => {
   };
 
   const handleOrderSubmit = async (orderData: any) => {
-    const Data = {
-      paymentMethod: orderData.paymentMethod,
-      userId: user?._id,
-      address: orderData.address,
-      products: items.map(
-        ({ pizzaDetails, size, extraToppings, quantity, price }) => ({
-          pizzaDetails: pizzaDetails.id, // Only the pizza ID
-          size,
-          extraToppings,
-          quantity,
-          price,
-        })
-      ),
-      totalAmount: calculateTotalPrice,
-    };
 
-    if (orderData.paymentMethod === "COD") {
+    if (!user) {
+      alert("Login First....")
+    } else {
 
-      dispatch(createOrder(Data));
-      setIsModalOpen(false);
-      setOrderPlaced(true);
+      const Data: CreateOrderInput = {
+        paymentMethod: orderData.paymentMethod,
+        userId: user._id,
+        address: orderData.address,
+        products: items.map(
+          ({ pizzaDetails, size, extraToppings, quantity, price }) => ({
+            pizzaDetails: pizzaDetails.id, // Only the pizza ID
+            size,
+            extraToppings,
+            quantity,
+            price,
+          })
+        ),
+        totalAmount: calculateTotalPrice,
+      };
 
-      toast.success('Order Placed Successfully !')
-    
-      
-    }
 
-    if (orderData.paymentMethod === "Online") {
-      // 🔥 Online Payment Flow
-      try {
-        await loadRazorpayScript();
+      if (orderData.paymentMethod === "COD") {
 
-        // 1️⃣ Call backend to create a Razorpay order
-        const result = await createOrderApi(Data);
+        dispatch(createOrder(Data));
+        setIsModalOpen(false);
+        setOrderPlaced(true);
 
-        if (!result.success) {
-          toast.error("Failed to create order")
-          // alert("Failed to create order");
-          return;
-        }
+        toast.success('Order Placed Successfully !')
 
-        // 2️⃣ Open Razorpay payment UI
-        const options = {
-          key: result.key, // Razorpay API Key
-          amount: result.amount,
-          currency: result.currency,
-          order_id: result.orderId,
-          name: "Pizza Rush",
-          description: "Order Payment",
-          handler: async (response: any) => {
-            // 3️⃣ On Success, send payment details to backend
-            const paymentData = {
-              userId: user?._id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-            };
 
-            dispatch(verifyPayment(paymentData)); // Dispatch action with payment details
-            setOrderPlaced(true);
-            setIsModalOpen(false);
+      }
 
-            toast.success('Order Placed Successfully !')
-          
-          },
-          prefill: {
-            name: user?.name,
-            email: user?.email,
-            contact: 9999999999,
-          },
-          theme: { color: "#F1C93B" },
-        };
+      if (orderData.paymentMethod === "Online") {
+        // 🔥 Online Payment Flow
+        try {
+          await loadRazorpayScript();
 
-        alert(
-          "Now Razorpay page will open. Use the following details to complete the payment:\n\n" +
+          // 1️⃣ Call backend to create a Razorpay order
+          const result = await createOrderApi(Data);
+
+          if (!result.success) {
+            toast.error("Failed to create order")
+            // alert("Failed to create order");
+            return;
+          }
+
+          // 2️⃣ Open Razorpay payment UI
+          const options = {
+            key: result.key, // Razorpay API Key
+            amount: result.amount,
+            currency: result.currency,
+            order_id: result.orderId,
+            name: "Pizza Rush",
+            description: "Order Payment",
+            handler: async (response: any) => {
+              // 3️⃣ On Success, send payment details to backend
+              const paymentData = {
+                userId: user?._id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+              };
+
+              dispatch(verifyPayment(paymentData)); // Dispatch action with payment details
+              setOrderPlaced(true);
+              setIsModalOpen(false);
+
+              toast.success('Order Placed Successfully !')
+
+            },
+            prefill: {
+              name: user?.name,
+              email: user?.email,
+              contact: 9999999999,
+            },
+            theme: { color: "#F1C93B" },
+          };
+
+          alert(
+            "Now Razorpay page will open. Use the following details to complete the payment:\n\n" +
             "1. For UPI: Enter UPI ID 'success@razorpay'\n" +
             "2. For Card: Use card number '4111 1111 1111 1111', any future expiry date, and any CVV\n" +
             "3. Use any 4 digit OTP when use Card for Payment.\n\n" +
             "Click OK to proceed."
-        );
+          );
 
-        const razorpay = new (window as any).Razorpay(options);
-        razorpay.open();
-      } catch (error) {
-       
-        toast.error("Payment failed. Try again.")
+          const razorpay = new (window as any).Razorpay(options);
+          razorpay.open();
+        } catch (error) {
+
+          toast.error("Payment failed. Try again.")
+        }
       }
     }
+
   };
   useEffect(() => {
     if (orderPlaced && orders.length > 0) {
@@ -169,7 +178,7 @@ const Cart = () => {
     }
   }, [orders, navigate]);
 
-   useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 

@@ -55,10 +55,16 @@ const orderProductSchema = z.object({
   price: z.number(),
 });
 
+
+
 // Define schema for an order
 export const orderResponseSchema = z.object({
   _id: z.string(),
-  userId: z.string(),
+  userId: z.object({
+    _id:z.string(),
+    name:z.string(),
+    email:z.string(),
+  }),
   address: z.string(),
   totalAmount: z.number(),
   paymentMethod: z.enum(["COD", "Online"]),

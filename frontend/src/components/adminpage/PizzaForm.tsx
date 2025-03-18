@@ -3,6 +3,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios from "axios";
+import { CreatePizzaInput } from "@/schema/pizzaSchema";
 
 
 const baseURL = import.meta.env.VITE_API_BASE_URL; // Load from .env
@@ -27,14 +28,14 @@ const createPizzaSchema = z.object({
   extraToppings: z.array(extraToppingSchema).optional(),
 });
 
-const PizzaForm = ({ onSubmit, defaultValues, onClose, type }) => {
+const PizzaForm = ({ onSubmit, defaultValues, onClose, type }:any) => {
   const {
     control,
     handleSubmit,
     register,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<CreatePizzaInput>({
     resolver: zodResolver(createPizzaSchema),
     defaultValues: defaultValues || {
       name: "",
@@ -66,7 +67,7 @@ const PizzaForm = ({ onSubmit, defaultValues, onClose, type }) => {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleImageUpload = async (event) => {
+  const handleImageUpload = async (event:any) => {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -93,7 +94,7 @@ const PizzaForm = ({ onSubmit, defaultValues, onClose, type }) => {
     }
   };
 
-  const onFormSubmit = (data) => {
+  const onFormSubmit = (data:CreatePizzaInput) => {
 
     onSubmit({ data, type, id: defaultValues?._id })
 

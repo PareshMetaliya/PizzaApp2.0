@@ -14,6 +14,7 @@ interface CartItem {
     image: string;
   };
   size: "Small" | "Medium" | "Large";
+ 
   extraToppings?: ExtraTopping[];
   quantity: number;
   price: number;

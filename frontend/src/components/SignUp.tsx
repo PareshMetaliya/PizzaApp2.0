@@ -24,7 +24,7 @@ const SignUp = () => {
       }
   
     } catch (error: any) {
-      toast("Signup failed: " + (error.response?.message || error.message));
+      toast.success("Signup failed: " + (error.response?.message || error.message));
     }
   };
 

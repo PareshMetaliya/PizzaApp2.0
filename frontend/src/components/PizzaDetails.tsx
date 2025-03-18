@@ -16,10 +16,10 @@ const PizzaDetails = () => {
 
   const { id } = useParams();
   const [pizza, setPizza] = useState<PizzaResponse | null>(null);
-  const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedToppings, setSelectedToppings] = useState([]);
+  const [selectedSize, setSelectedSize] = useState<{ size: "Small" | "Medium" | "Large", price: number } | null>(null);
+  const [selectedToppings, setSelectedToppings] = useState<{ name: string, price: number }[]>([]);
   const [quantity, setQuantity] = useState(1);
-  const [finalPrice, setFinalPrice] = useState();
+  const [finalPrice, setFinalPrice] = useState<number>();
 
   useEffect(() => {
     const fetchPizza = async () => {
@@ -32,7 +32,7 @@ const PizzaDetails = () => {
           setSelectedSize(response.pizza.sizes[0]); // ✅ Set default size after fetching
         }
       } catch (error) {
-      
+
       }
     };
 
@@ -40,12 +40,12 @@ const PizzaDetails = () => {
   }, [id]);
 
   // Handle size selection
-  const handleSizeChange = (size) => {
+  const handleSizeChange = (size: any) => {
     setSelectedSize(size);
   };
 
   // Handle topping selection
-  const handleToppingChange = (topping) => {
+  const handleToppingChange = (topping: { name: string, price: number }) => {
     setSelectedToppings((prevToppings) => {
       const isToppingSelected = prevToppings.some((item) => item.name === topping.name);
       return isToppingSelected
@@ -55,7 +55,7 @@ const PizzaDetails = () => {
   };
 
   // Handle quantity change
-  const handleQuantityChange = (type) => {
+  const handleQuantityChange = (type: string) => {
     setQuantity((prev) => (type === "increment" ? prev + 1 : prev > 1 ? prev - 1 : prev));
   };
 
@@ -67,16 +67,27 @@ const PizzaDetails = () => {
     setFinalPrice(price);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     calculateTotalPrice();
-  },[pizza,selectedSize,selectedToppings,quantity])
+  }, [pizza, selectedSize, selectedToppings, quantity])
 
   const handleAddToCart = () => {
+
+    if (!pizza) {
+      return   toast.error("No pizza selected...")
+    }
+    if (!selectedSize) {
+      return   toast.error("No pizza selected...")
+    }
+    if (!finalPrice) {
+      return   toast.error("No pizza selected...")
+    }
+
     const data = {
       pizzaDetails: {
-        id: pizza?._id,
-        name: pizza?.name,
-        image: pizza?.image
+        id: pizza._id,
+        name: pizza.name,
+        image: pizza.image
       },
       size: selectedSize?.size,
       extraToppings: selectedToppings,
