@@ -246,7 +246,7 @@ const PizzaForm = ({ onSubmit, defaultValues, onClose, type }:any) => {
         >
           Cancel
         </button>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+        <button disabled={isUploading} type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
           {defaultValues ? "Update Pizza" : "Add Pizza"}
         </button>
       </div>
