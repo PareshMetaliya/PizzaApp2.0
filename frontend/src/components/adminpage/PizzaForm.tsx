@@ -249,6 +249,7 @@ const PizzaForm = ({ onSubmit, defaultValues, onClose, type }:any) => {
         <button disabled={isUploading} type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
           {defaultValues ? "Update Pizza" : "Add Pizza"}
         </button>
+        {isUploading && <p className="text-sm font-semibold text-white mt-2">Pizza image is uploading</p>}
       </div>
     </form>
   );
