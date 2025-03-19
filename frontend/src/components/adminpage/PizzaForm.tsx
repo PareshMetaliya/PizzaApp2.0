@@ -6,7 +6,7 @@ import axios from "axios";
 import { CreatePizzaInput } from "@/schema/pizzaSchema";
 
 
-const baseURL = import.meta.env.VITE_API_BASE_URL; // Load from .env
+
 
 // Zod Schema
 const sizeSchema = z.object({
@@ -67,27 +67,59 @@ const PizzaForm = ({ onSubmit, defaultValues, onClose, type }:any) => {
 
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleImageUpload = async (event:any) => {
+  // const baseURL = import.meta.env.VITE_API_BASE_URL; 
+
+  // const handleImageUpload = async (event:any) => {
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   setIsUploading(true);
+
+  //   const formData = new FormData();
+  //   formData.append("image", file); // Key should match the backend expectation
+
+  //   try {
+  //     // Upload image to backend
+  //     const response = await axios.post(`${baseURL}/api/pizzas/upload-image`, formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+
+  //     // Set the image URL in the form
+  //     setValue("image", response.data.imageUrl);
+  //   } catch (error) {
+    
+  //     alert("Failed to upload image. Please try again.");
+  //   } finally {
+  //     setIsUploading(false);
+  //   }
+  // };
+
+  const handleImageUpload = async (event: any) => {
     const file = event.target.files[0];
     if (!file) return;
-
+  
     setIsUploading(true);
-
+  
     const formData = new FormData();
-    formData.append("image", file); // Key should match the backend expectation
-
+    formData.append("image", file); // Key should be "image" for Imgur API
+  
     try {
-      // Upload image to backend
-      const response = await axios.post(`${baseURL}/api/pizzas/upload-image`, formData, {
+      // Upload image to Imgur
+      const response = await axios.post("https://api.imgur.com/3/image", formData, {
         headers: {
+         
+          "Authorization": `Client-ID ${import.meta.env.VITE_API_IMGUR_ID}`,
           "Content-Type": "multipart/form-data",
         },
       });
-
+  
       // Set the image URL in the form
-      setValue("image", response.data.imageUrl);
+      const imageUrl = response.data.data.link; // Imgur returns the link in `data.link`
+      setValue("image", imageUrl);
     } catch (error) {
-    
+      console.error("Image upload failed:", error);
       alert("Failed to upload image. Please try again.");
     } finally {
       setIsUploading(false);
