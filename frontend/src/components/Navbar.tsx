@@ -150,7 +150,7 @@ function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link to="/login" className="text-customGreen font-semibold">
+              <Link to="/login/nav" className="text-customGreen font-semibold">
                 Log In
               </Link>
             )}
@@ -201,7 +201,7 @@ function Navbar() {
                 </>
               ) : (
                 <Link
-                  to="/login"
+                  to="/login/nav"
                   className="text-customGreen font-semibold"
                   onClick={() => setIsMenuOpen(false)}
                 >
