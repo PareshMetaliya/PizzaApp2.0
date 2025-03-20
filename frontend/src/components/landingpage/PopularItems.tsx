@@ -6,7 +6,6 @@ import { selectpizzas } from "@/redux/slices/pizzaSlice";
 import { GetPizzasQueryParams } from "@/schema/pizzaSchema";
 import { useEffect } from "react";
 import ProductCardSkeleton from "@/skeleton/ProductCardSkeleton";
-import { p } from "node_modules/react-router/dist/development/fog-of-war-BALYJxf_.d.mts";
 
 function PopularItems() {
   const dispatch = useDispatch<AppDispatch>();
