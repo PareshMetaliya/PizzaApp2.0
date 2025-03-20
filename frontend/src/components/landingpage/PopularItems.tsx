@@ -6,6 +6,7 @@ import { selectpizzas } from "@/redux/slices/pizzaSlice";
 import { GetPizzasQueryParams } from "@/schema/pizzaSchema";
 import { useEffect } from "react";
 import ProductCardSkeleton from "@/skeleton/ProductCardSkeleton";
+import { p } from "node_modules/react-router/dist/development/fog-of-war-BALYJxf_.d.mts";
 
 function PopularItems() {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,6 +39,9 @@ function PopularItems() {
             carefully<br></br> curated selection for our discerning patrons
           </p>
         </div>
+        {loading && <p className="text-sm text-gray-500 mt-4">
+  🚀 Hosted on a free Render backend. API may take 30-50 secs. Please wait or refresh if needed. Thanks for your patience! 🙏
+</p>}
 
         <div className="  grid grid-cols-4 max-xs:grid-cols-1 max-sm:grid-cols-2 max-md:grid-cols-2 max-lg:grid-cols-4 gap-2 mt-6">
           {loading

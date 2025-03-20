@@ -222,6 +222,9 @@ const Menu = () => {
           </select>
         </div>
 
+        {loading && <p className="text-sm text-gray-500 mt-4">
+  🚀 Hosted on a free Render backend. API may take 30-50 secs. Please wait or refresh if needed. Thanks for your patience! 🙏
+</p>}
         {/* Pizza Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
